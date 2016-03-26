@@ -277,6 +277,16 @@ class ButtonsFrame(CommonFrame):
         _('_Alt'),
         _('Show the Alt key when pressed.'),
         'alt')
+    self._add_check(
+        vbox,
+        _('_AltGr'),
+        _('Show the AltGr key when pressed.'),
+        'altgr')
+    self._add_check(
+        vbox,
+        _('_Caps'),
+        _('Show the Caps key when pressed.'),
+        'caps')
     self._add_dropdown(
         vbox,
         _('Old Keys:'),

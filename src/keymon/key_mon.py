@@ -117,7 +117,7 @@ class KeyMon:
     self.shape_mask_current = None
     self.shape_mask_cache = {}
 
-    self.MODS = ['SHIFT', 'CTRL', 'META', 'ALT']
+    self.MODS = ['SHIFT', 'CTRL', 'META', 'ALT', 'ALTGR', 'CAPS']
     self.IMAGES = ['MOUSE'] + self.MODS
     self.images = dict([(img, None) for img in self.IMAGES])
     self.enabled = dict([(img, self.get_option(cstrf(img.lower))) for img in self.IMAGES])
@@ -198,6 +198,8 @@ class KeyMon:
       'CTRL_EMPTY': [self.svg_name('ctrl'), self.svg_name('whiteout-58')],
       'META': [self.svg_name('meta'), self.svg_name('meta')],
       'META_EMPTY': [self.svg_name('meta'), self.svg_name('whiteout-58')],
+      'CAPS': [self.svg_name('caps')],
+      'CAPS_EMPTY': [self.svg_name('caps'), self.svg_name('whiteout-58')],
       'ALT': [self.svg_name('alt')],
       'ALT_EMPTY': [self.svg_name('alt'), self.svg_name('whiteout-58')],
       'ALTGR': [self.svg_name('altgr')],
@@ -589,7 +591,7 @@ class KeyMon:
       image.switch_to_default()
 
   def is_shift_code(self, code):
-    if code in ('SHIFT', 'ALT', 'ALTGR', 'CTRL', 'META'):
+    if code in ('SHIFT', 'ALT', 'ALTGR', 'CTRL', 'META', 'CAPS'):
       return True
     return False
 
@@ -608,13 +610,10 @@ class KeyMon:
       self._handle_event(self.key_image, code, value)
       return
     for keysym, img in (('KEY_SHIFT', 'SHIFT'), ('KEY_CONTROL', 'CTRL'),
-                        ('KEY_ALT', 'ALT'), ('KEY_ISO_LEVEL3_SHIFT', 'ALT'),
-                        ('KEY_SUPER', 'META')):
+                        ('KEY_ALT', 'ALT'), ('KEY_ISO_LEVEL5_SHIFT', 'ALTGR'),
+                        ('KEY_ISO_LEVEL3_SHIFT', 'CAPS'), ('KEY_SUPER', 'META')):
       if code.startswith(keysym):
         if self.enabled[img]:
-          if keysym == 'KEY_ISO_LEVEL3_SHIFT':
-            self._handle_event(self.images['ALT'], 'ALTGR', value)
-          else:
             self._handle_event(self.images[img], img, value)
         return
     if code.startswith('KEY_KP'):
@@ -869,6 +868,12 @@ def create_options():
   opts.add_option(opt_long='--alt', dest='alt', type='bool', default=True,
                   ini_group='buttons', ini_name='alt',
                   help=_('Show the alt key.'))
+  opts.add_option(opt_long='--altgr', dest='altgr', type='bool', default=True,
+                  ini_group='buttons', ini_name='altgr',
+                  help=_('Show the altgr key.'))
+  opts.add_option(opt_long='--caps', dest='caps', type='bool', default=True,
+                  ini_group='buttons', ini_name='caps',
+                  help=_('Show the caps key.'))
   opts.add_option(opt_long='--scale', dest='scale', type='float', default=1.0,
                   ini_group='ui', ini_name='scale',
                   help=_('Scale the dialog. ex. 2.0 is 2 times larger, 0.5 is '
